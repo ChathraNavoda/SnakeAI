@@ -44,25 +44,25 @@ class Linear_QNet(nn.Module):
                 reward = torch.unsqueeze(reward, 0)
                 done = (done, )
 
-    # 1: Predicted Q values with the current state
-        pred = self.model(state)
+        # 1: Predicted Q values with the current state
+            pred = self.model(state)
 
-        target = pred.clone()
-        for idx in range(len(done)):
-            Q_new = reward[idx]
-            if not done[idx]:
-                Q_new = reward[idx] + self.gamma * torch.max(self.model(next_state[idx]))
+            target = pred.clone()
+            for idx in range(len(done)):
+                Q_new = reward[idx]
+                if not done[idx]:
+                    Q_new = reward[idx] + self.gamma * torch.max(self.model(next_state[idx]))
 
-            # Use action[idx] as an index to assign Q_new
-            target[idx][action[idx]] = Q_new
+                # Use action[idx] as an index to assign Q_new
+                target[idx][action[idx]] = Q_new
 
-            
- # 2: Compute the mean squared error loss
-        loss = self.criteria(target, pred)
+                
+        # 2: Compute the mean squared error loss
+            loss = self.criteria(target, pred)
 
-        # 3: Perform backpropagation and optimization
-        self.optimizer.zero_grad()
-        loss.backward()
-        self.optimizer.step()
+            # 3: Perform backpropagation and optimization
+            self.optimizer.zero_grad()
+            loss.backward()
+            self.optimizer.step()
 
-        return loss.item()
+            return loss.item()
