@@ -57,3 +57,12 @@ class Linear_QNet(nn.Module):
             target[idx][action[idx]] = Q_new
 
             
+ # 2: Compute the mean squared error loss
+        loss = self.criteria(target, pred)
+
+        # 3: Perform backpropagation and optimization
+        self.optimizer.zero_grad()
+        loss.backward()
+        self.optimizer.step()
+
+        return loss.item()
